@@ -8,7 +8,7 @@ function! AddMagic()
   let l:sourcefile=l:dirname . "/" . l:basename . ".C"
   let l:classname=system("sed -e '/^class.*[^;]$/!d' " . l:headerfile)
   let l:classname=substitute(l:classname, '\v^class *(\k+).*', '\1', "")
-  let l:sedoutput=system("sed -f ~/.vim/plugin/magic.sed " . l:headerfile)
+  let l:sedoutput=system("sed -f ~/.vim/bundle/addmagic/plugin/magic.sed " . l:headerfile)
   let l:linenumber=1
   let l:methods_in_sourcefile='@'
   while l:linenumber < line('$')
@@ -54,7 +54,7 @@ function! AddMagic()
 endfunction
 
 function! AddMagicAri()
-  let l:message=system("~/.vim/plugin/complete_ari.sh " . expand("%:p")." 2>&1")
+  let l:message=system("~/.vim/bundle/addmagic/plugin/complete_ari.sh " . expand("%:p")." 2>&1")
   let l:messagesplit=split(l:message, "\n")
   for l:line in l:messagesplit
     echoerr l:line
