@@ -132,7 +132,7 @@ for search_dir in $search_dirs; do
     if [ $debug = "1" ]; then
       echo $location
     fi
-    if [ -s $location ]; then
+    if [ ! -s $location ]; then
       location=$(find -L $DESIGN_WORK_DIR -iregex ".*[.]vhdl?" -type f -print0 \
       2>/dev/null | xargs -0 grep -i -l "^[ ]*entity[ ]*${entity}[ ]*is$")
     fi
@@ -163,7 +163,7 @@ for search_dir in $search_dirs; do
         dir=$(echo $dir | sed -e "s:^$real_search_dir:$search_dir:")
       fi
       if [ -e $abs_dir/$entity.ari ]; then
-        entities=$(echo $entities | sed -e "s/\\<$entity\\>//")
+#        entities=$(echo $entities | sed -e "s/\\<$entity\\>//")
         cat >> /tmp/ari_append <<EOF
 
 info $entity
@@ -174,7 +174,6 @@ info $entity
 };
 EOF
       else
-        entities=$(echo $entities | sed -e "s/\\<$entity\\>//")
         cat >> /tmp/ari_append <<EOF
 
 info $entity
