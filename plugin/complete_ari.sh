@@ -69,10 +69,10 @@ EOF
 
 cd $(dirname $ari_file)
 
-if [ $debug == 1 ]; then
-  cat $awk_script > ~/tmp/awkscript
-  $(awk -f $awk_script $ari_file &> ~/tmp/awkresult)
-fi
+#if [ $debug == 1 ]; then
+#  cat $awk_script > ~/tmp/awkscript
+#  $(awk -f $awk_script $ari_file &> ~/tmp/awkresult)
+#fi
 entities=$(awk -f $awk_script $ari_file | sort -u)
 
 # remove the ones that already have an info section
@@ -132,8 +132,8 @@ for search_dir in $search_dirs; do
     if [ $debug = "1" ]; then
       echo $location
     fi
-    if [ ! -s $location ]; then
-      location=$(find -L $DESIGN_WORK_DIR -iregex ".*[.]vhdl?" -type f -print0 \
+    if [ ! -s "$location" ]; then
+      location=$(find -L $real_search_dir -iregex ".*[.]vhdl?" -type f -print0 \
       2>/dev/null | xargs -0 grep -i -l "^[ ]*entity[ ]*${entity}[ ]*is$")
     fi
     if [ $debug = "1" ]; then
@@ -163,7 +163,7 @@ for search_dir in $search_dirs; do
         dir=$(echo $dir | sed -e "s:^$real_search_dir:$search_dir:")
       fi
       if [ -e $abs_dir/$entity.ari ]; then
-#        entities=$(echo $entities | sed -e "s/\\<$entity\\>//")
+        entities=$(echo $entities | sed -e "s/\\<$entity\\>//")
         cat >> /tmp/ari_append <<EOF
 
 info $entity
@@ -174,6 +174,7 @@ info $entity
 };
 EOF
       else
+        entities=$(echo $entities | sed -e "s/\\<$entity\\>//")
         cat >> /tmp/ari_append <<EOF
 
 info $entity
