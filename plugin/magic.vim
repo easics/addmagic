@@ -67,3 +67,6 @@ function! AddMagicAri()
   !rm /tmp/ari_append
   normal `x
 endfunction
+
+autocmd FileType cpp nmap <F7> :call AddMagic()
+autocmd FileType ari nmap <F7> :call AddMagicAri()

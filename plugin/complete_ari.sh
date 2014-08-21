@@ -69,10 +69,10 @@ EOF
 
 cd $(dirname $ari_file)
 
-#if [ $debug == 1 ]; then
-#  cat $awk_script > ~/tmp/awkscript
-#  $(awk -f $awk_script $ari_file &> ~/tmp/awkresult)
-#fi
+if [ $debug == 1 ]; then
+  cat $awk_script > ~/tmp/awkscript
+  $(awk -f $awk_script $ari_file &> ~/tmp/awkresult)
+fi
 entities=$(awk -f $awk_script $ari_file | sort -u)
 
 # remove the ones that already have an info section
