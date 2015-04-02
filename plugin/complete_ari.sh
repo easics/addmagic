@@ -1,4 +1,4 @@
-#! /bin/sh -e
+#! /bin/sh
 
 ari_file=$1
 
@@ -106,6 +106,10 @@ search_dirs=$(awk -f $awk_script $vma_ini)
 ari_file_dir=$(dirname $ari_file)
 cat /dev/null > /tmp/ari_append
 
+if [ $debug = "1" ]; then
+  echo $search_dirs
+fi
+
 for search_dir in $search_dirs; do
   library=${search_dir%:*}
   search_dir=${search_dir#*:}
@@ -124,12 +128,15 @@ for search_dir in $search_dirs; do
       echo "Warning : $real_search_dir does not exist"
       continue
     fi
-    location=$(find $real_search_dir -name ${entity}_ent.vhd -o \
-                                     -name ${entity}_ENT.vhd -o \
-                                     -name ${entity}.e.vhd -o \
-                                     -name ${entity}.e.vhdl -o \
-                                     -name ${entity}.vhdl -o \
-                                     -name ${entity}.vhd)
+    if [ $debug = "1" ]; then
+      echo "Searching location "
+    fi
+    location=$(find $real_search_dir -iname ${entity}_ent.vhd -o \
+                                     -iname ${entity}_ENT.vhd -o \
+                                     -iname ${entity}.e.vhd -o \
+                                     -iname ${entity}.e.vhdl -o \
+                                     -iname ${entity}.vhdl -o \
+                                     -iname ${entity}.vhd)
     if [ $debug = "1" ]; then
       echo $location
     fi
@@ -143,9 +150,9 @@ for search_dir in $search_dirs; do
     location=$non_empty
     # if nothing found, search again with a more liberal pattern
     if [ -z "$location" ]; then
+      echo "Tes1t"
       location=$(find -L $real_search_dir -iregex ".*[.]vhdl?" -type f -print0 \
-      2>/dev/null | xargs -0 grep -s -i -l "^[ ]*entity[ ]*${entity}[ ]*is$" \
-      || true)
+      2>/dev/null | xargs -0 grep -i -l "^[ ]*entity[ ]*${entity}[ ]*is$")
     fi
     if [ $debug = "1" ]; then
       echo $location
@@ -200,7 +207,6 @@ EOF
       for f in $location; do
         echo $f
       done
-      exit 1
     fi
   done
 done
