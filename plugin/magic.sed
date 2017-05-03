@@ -1,4 +1,6 @@
 /^class/,/^};/!d
+/SC_HAS_PROCESS/d
+/^signals:/,/^\(public\|protected:\|private:\)/d
 /^class/{
 N
 d
