@@ -9,6 +9,11 @@ function! AddMagic()
   let l:classname=system("sed -e '/^class.*[^;]$/!d' " . l:headerfile)
   let l:classname=substitute(l:classname, '\v^class *(\k+).*', '\1', "")
   let s:script_path = expand('<script>:p:h')
+  let l:sedoutput=system("sed -f " . s:script_path . "/magic.sed " . l:headerfile)
+  if v:shell_error
+    call append(line('.'), 'Sed error: ' . l:sedoutput)
+    return
+  endif
   let l:linenumber=1
   let l:methods_in_sourcefile='@'
   while l:linenumber < line('$')
@@ -55,6 +60,10 @@ endfunction
 
 function! AddMagicAri()
   let s:script_path = expand('<script>:p:h')
+  let l:message=system(s:script_path . "/complete_ari.sh " . expand("%:p")." 2>&1")
+  if v:shell_error != 0:
+    call append(line('.'), 'Sed error: ' . l:message)
+  endif
   let l:messagesplit=split(l:message, "\n")
   for l:line in l:messagesplit
     echoerr l:line
